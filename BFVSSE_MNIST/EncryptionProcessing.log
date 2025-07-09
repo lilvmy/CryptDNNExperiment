@@ -1,0 +1,14 @@
+2025-07-08 18:16:00 - MainThread - root - INFO - Loading model from file LeNet1_ReLU2.pt...
+2025-07-08 18:16:00 - MainThread - root - INFO - Sequential(
+  (0): Conv2d(1, 4, kernel_size=(5, 5), stride=(1, 1))
+  (1): ReLU()
+  (2): AvgPool2d(kernel_size=2, stride=2, padding=0)
+  (3): Conv2d(4, 12, kernel_size=(5, 5), stride=(1, 1))
+  (4): ReLU()
+  (5): AvgPool2d(kernel_size=2, stride=2, padding=0)
+  (6): Flatten(start_dim=1, end_dim=-1)
+  (7): Linear(in_features=192, out_features=10, bias=True)
+)
+2025-07-08 18:16:00 - MainThread - root - INFO - Run the experiments...
+2025-07-08 18:16:00 - MainThread - root - INFO - I will use 8 threads.
+2025-07-08 18:16:00 - MainThread - root - INFO - Using encryption parameters: m = 4096, p = 953983721

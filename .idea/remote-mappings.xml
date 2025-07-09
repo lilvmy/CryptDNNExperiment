@@ -6,7 +6,14 @@
         <remote-mappings server-id="python@sftp://cysren@172.21.149.212:22/home/cysren/anaconda3/envs/ld_env/bin/python3.8">
           <settings>
             <list>
-              <mapping local-root="$PROJECT_DIR$" remote-root="/home/cysren/Desktop/lilvmy/PPDLTest" />
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/cysren/Desktop/lilvmy/CryptDNNExperiment" />
+            </list>
+          </settings>
+        </remote-mappings>
+        <remote-mappings server-id="python@sftp://cysren@10.96.185.11:22/home/cysren/anaconda3/envs/cryptdnn/bin/python3.8">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/home/cysren/home/cysren/Desktop/ld_file/CryptDNNExperiment" />
             </list>
           </settings>
         </remote-mappings>

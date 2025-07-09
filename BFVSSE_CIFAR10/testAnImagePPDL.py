@@ -8,6 +8,7 @@ import numpy as np
 import time
 import pandas as pd
 from BFVSSE_CIFAR10 import util
+import sys
 
 transform = transforms.ToTensor()
 
@@ -20,7 +21,7 @@ test_set = torchvision.datasets.CIFAR10(
 
 
 
-model_file = "/home/cysren/Desktop/lilvmy/PPDLTest/BFVSSE_CIFAR10/VGG_single_16.pt"
+model_file = "/home/lilvmy/paper-demo/paper7/CryptDNNExperiment/BFVSSE_CIFAR10/VGG_single_16.pt"
 
 class ReLU(nn.Module):
     def __init__(self):
@@ -250,13 +251,19 @@ def enc_and_process(image, image_no):
         s1 = time.time()
         if str(layer)[10:14] == "ReLU":
             decrypt_image = decrypt_matrix(HE, encrypted_image)
+            print(
+                f"the communication complexity between the CP with the client is {sys.getsizeof(decrypt_image) / (1024)} KB")
 
             df = pd.DataFrame(decrypt_image.reshape(decrypt_image.shape[0], -1))
             df.to_csv(f'image_{image_no}.csv', index=False)
 
             tmp_encrypted_image = np.array(list(map(encrypt_decrypt_image, decrypt_image.flatten()))).reshape(decrypt_image.shape)
+            print(
+                f"the communication complexity between the client with the SP is {sys.getsizeof(tmp_encrypted_image) / (1024)} KB")
             sta_time = time.time()
             encrypted_image = np.array(list(map(replace_element, tmp_encrypted_image.flatten()))).reshape(tmp_encrypted_image.shape)
+            print(
+                f"the communication complexity between the SP with the CP is {sys.getsizeof(encrypted_image) / (1024)} KB")
             tmp_end_time = time.time()
             print(f"the time cost of relu layer is: {tmp_end_time - sta_time}s")
         else:
@@ -273,7 +280,7 @@ def replace_element(element):
     else:
         return HE.encryptFrac(0.0)  # if the current value not in relu_HE_image, return the HE.encryptFrac(0.0)
 
-filename = "/home/cysren/Desktop/lilvmy/PPDLTest/BFVSSE_CIFAR10/shared_key.txt"
+filename = "/home/lilvmy/paper-demo/paper7/CryptDNNExperiment/BFVSSE_CIFAR10/shared_key.txt"
 shared_key = util.load_from_file(filename)
 iv=b'\xf2\xd6\xbei\xfc\x10;:(\xb6\x92\x7f2W\xbeR'
 def encrypt_decrypt_image(element):
@@ -281,7 +288,7 @@ def encrypt_decrypt_image(element):
     return ciphertext
 
 
-data_dict = util.read_csv_to_dict(shared_key, HE, iv, "/home/cysren/Desktop/lilvmy/PPDLTest/BFVSSE_CIFAR10/csv")
+data_dict = util.read_csv_to_dict(shared_key, HE, iv, "/home/lilvmy/paper-demo/paper7/CryptDNNExperiment/BFVSSE_CIFAR10/csv")
 relu_HE_image = data_dict.data
 
 
@@ -293,15 +300,16 @@ relu_HE_image = data_dict.data
 #     res = enc_and_process(image, i)
 #     print(f"the test {i}-th image lable is: {res.argmax(1)}")
 
-image, lable = test_set[24]
-print(f"the trust 24-th image lable is: {lable}")
-res = enc_and_process(image, 24)
+image, lable = test_set[0]
+print(f"the trust 0-th image lable is: {lable}")
+start_time = time.time()
+res = enc_and_process(image, 0)
 print(f"the test 24-th image lable is: {res.argmax(1)}")
 
-# total_time = time.time() - starting_time
+total_time = time.time() - start_time
 
-# print(f"The total inference time costs is: {total_time}")
-# print(res.argmax(1))
+print(f"The total inference time costs is: {total_time}")
+print(res.argmax(1))
 
 
 

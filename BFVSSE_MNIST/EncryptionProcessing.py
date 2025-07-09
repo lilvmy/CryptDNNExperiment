@@ -30,7 +30,6 @@ root_logger.addHandler(handler)
 #                 datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=log.DEBUG)
 
 transform = transforms.ToTensor()
-
 test_set = torchvision.datasets.MNIST(
     root='./data',
     train=False,
@@ -323,7 +322,7 @@ def replace_element(element):
     else:
         return HE.encryptFrac(0.0)  # if the current value not in relu_HE_image, return the HE.encryptFrac(0.0)
 
-data_dict = util.read_csv_to_dict(shared_key, HE, iv, "/home/cysren/Desktop/lilvmy/PPDLTest/BFVSSE_MNIST/csv")
+data_dict = util.read_csv_to_dict(shared_key, HE, iv, "/home/lilvmy/paper-demo/paper7/CryptDNNExperiment/BFVSSE_MNIST/csv")
 relu_HE_image = data_dict.data
 
 

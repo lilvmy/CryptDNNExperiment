@@ -8,6 +8,8 @@ import numpy as np
 import time
 from BFVSSE_MNIST import util
 
+import sys
+
 transform = transforms.ToTensor()
 
 test_set = torchvision.datasets.MNIST(
@@ -19,7 +21,7 @@ test_set = torchvision.datasets.MNIST(
 
 
 
-model_file = "/home/cysren/Desktop/lilvmy/PPDLTest/BFVSSE_MNIST/LeNet1_single_ReLU.pt"
+model_file = "/home/lilvmy/paper-demo/paper7/CryptDNNExperiment/BFVSSE_MNIST/LeNet1_single_ReLU.pt"
 
 class ReLU(nn.Module):
     def __init__(self):
@@ -240,7 +242,15 @@ model.to("cpu")
 model_encoded = build_from_pytorch(HE, model)
 
 def enc_and_process(image):
+    plain_image = image
+    print(f"plain image is {plain_image}")
     encrypted_image = encrypt_matrix(HE, image.unsqueeze(0).numpy())
+
+    print(f"encrypt_image is {encrypted_image}")
+
+    decrypt_image = decrypt_matrix(HE, encrypted_image)
+    print(f"decrypt_image is {decrypt_image}")
+
 
     for layer in model_encoded:
         s1 = time.time()
@@ -248,9 +258,14 @@ def enc_and_process(image):
 
             decrypt_image = decrypt_matrix(HE, encrypted_image)
 
+            print(f"the communication complexity between the CP with the client is {sys.getsizeof(decrypt_image) / (1024)} KB")
+
             tmp_encrypted_image = np.array(list(map(encrypt_decrypt_image, decrypt_image.flatten()))).reshape(decrypt_image.shape)
+            print(f"the communication complexity between the client with the SP is {sys.getsizeof(tmp_encrypted_image) / (1024)} KB")
+
             sta_time = time.time()
             encrypted_image = np.array(list(map(replace_element, tmp_encrypted_image.flatten()))).reshape(tmp_encrypted_image.shape)
+            print(f"the communication complexity between the SP with the CP is {sys.getsizeof(encrypted_image) / (1024)} KB")
             tmp_end_time = time.time()
             print(f"the time cost of relu layer is: {tmp_end_time - sta_time}s")
         else:
@@ -278,7 +293,7 @@ image, lable = test_set[0]
 print(lable)
 
 
-data_dict = util.read_csv_to_dict(shared_key, HE, iv, "/home/cysren/Desktop/lilvmy/PPDLTest/BFVSSE_MNIST/csv")
+data_dict = util.read_csv_to_dict(shared_key, HE, iv, "/home/lilvmy/paper-demo/paper7/CryptDNNExperiment/BFVSSE_MNIST/csv")
 relu_HE_image = data_dict.data
 # print(relu_HE_image)
 
@@ -286,6 +301,7 @@ relu_HE_image = data_dict.data
 starting_time = time.time()
 
 res = enc_and_process(image)
+print(f"results is {res}")
 
 total_time = time.time() - starting_time
 
