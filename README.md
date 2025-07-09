@@ -20,8 +20,8 @@
        #include<stdexcept>
 ### 6. pip install .
 ### 7. cd Pyfhel/Pyfhel
-### 8. rm -rf __init__.py
+### 8. rm -rf \__init\__.py
 
 
-# If you have any questions, please contact me
+# If you have any questions, please contact me.
 
